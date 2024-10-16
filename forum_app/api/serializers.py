@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from forum_app.models import Like, Answer, Question
+from django.contrib.auth.models import AnonymousUser
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['id', 'content', 'author', 'created_at']
+        fields = ['id', 'content', 'author', 'created_at', 'question']
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +17,9 @@ class LikeSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         question = data['question']
 
+        if isinstance(user, AnonymousUser):
+            raise serializers.ValidationError("You must logged in to like.")
+        
         if Like.objects.filter(user=user, question=question).exists():
             raise serializers.ValidationError("You have already liked this question.")
 
