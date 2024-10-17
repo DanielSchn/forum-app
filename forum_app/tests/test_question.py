@@ -29,73 +29,71 @@ class QuestionTests(APITestCase):
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
-        
-        
 
-        # print(f"setUp User authenticated:", self.client.credentials())
+    def test_list_post_question_authorized(self):
+        url = reverse('question-list')
+        data = {
+            'title': 'Question1',
+            'content': 'Content1',
+            'author': self.user.id,
+            'category': 'frontend'
+        }
+        response = self.client.post(url, data, format='json')
 
-    # def test_list_post_question_authorized(self):
-    #     url = reverse('question-list')
-    #     data = {
-    #         'title': 'Question1',
-    #         'content': 'Content1',
-    #         'author': self.user.id,
-    #         'category': 'frontend'
-    #     }
-    #     response = self.client.post(url, data, format='json')
-
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-    # def test_list_post_question_authorized_without_title(self):
-    #     url = reverse('question-list')
-    #     data = {
-    #         'content': 'Content1',
-    #         'author': self.user.id,
-    #         'category': 'frontend'
-    #     }
-    #     response = self.client.post(url, data, format='json')
+    def test_list_post_question_authorized_without_title(self):
+        url = reverse('question-list')
+        data = {
+            'content': 'Content1',
+            'author': self.user.id,
+            'category': 'frontend'
+        }
+        response = self.client.post(url, data, format='json')
 
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-    # def test_list_post_question_unauthorized(self):
-    #     url = reverse('question-list')
-    #     data = {
-    #         'title': 'Question1',
-    #         'content': 'Content1',
-    #         'author': self.user.id,
-    #         'category': 'frontend'
-    #     }
-    #     self.client.credentials()
-    #     response = self.client.post(url, data, format='json')
+    def test_list_post_question_unauthorized(self):
+        url = reverse('question-list')
+        data = {
+            'title': 'Question1',
+            'content': 'Content1',
+            'author': self.user.id,
+            'category': 'frontend'
+        }
+        self.client.credentials()
+        response = self.client.post(url, data, format='json')
 
-    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # def test_detail_question(self):
-    #     url = reverse('question-detail', kwargs={'pk': self.question.id})
-    #     response = self.client.get(url)
-    #     expected_data = QuestionSerializer(self.question).data
 
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data, expected_data)
-    #     self.assertDictEqual(response.data, expected_data)
-    #     self.assertJSONEqual(response.content, expected_data)
-    #     self.assertContains(response, 'title')
+    def test_detail_question(self):
+        url = reverse('question-detail', kwargs={'pk': self.question.id})
+        response = self.client.get(url)
+        expected_data = QuestionSerializer(self.question).data
 
-    # def test_question_list(self):
-    #     url = reverse('question-list')
-    #     response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+        self.assertDictEqual(response.data, expected_data)
+        self.assertJSONEqual(response.content, expected_data)
+        self.assertContains(response, 'title')
 
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # Macht Probleme, sehr wahrscheinlich permission
+    def test_question_list(self):
+        url = reverse('question-list')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    
     def test_edit_question_as_owner(self):
 
         url = reverse('question-detail', kwargs={'pk': self.question.id})
         print('URL', url)
-        print(f"User authenticated:", self.client.credentials())
-        print(f"Token being used:", self.token.key)
+        print(f"User authenticated: {self.client.credentials()}")
+        print(f"Token being used: {self.token.key}")
         
         data = {
             'title': 'Question1',
@@ -109,31 +107,31 @@ class QuestionTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-    # def test_edit_question_as_unauthorized(self):
+    def test_edit_question_as_unauthorized(self):
 
-    #     url = reverse('question-detail', kwargs={'pk': self.question.id})
-    #     data = {
-    #         'title': 'Question1',
-    #         'content': 'ContentEdit'
-    #     }
-    #     self.client.credentials()
-    #     response = self.client.patch(url, data=data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        url = reverse('question-detail', kwargs={'pk': self.question.id})
+        data = {
+            'title': 'Question1',
+            'content': 'ContentEdit'
+        }
+        self.client.credentials()
+        response = self.client.patch(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # Diese macht auch Probleme
-    # def test_delete_question_as_admin(self):
-    #     url = reverse('question-detail', kwargs={'pk': self.question.id})
+    
+    def test_delete_question_as_admin(self):
+        url = reverse('question-detail', kwargs={'pk': self.question.id})
         
-    #     self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token.key)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token.key)
 
-    #     response = self.client.delete(url)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
-    # def test_delete_question_as_unauthorized(self):
-    #     url = reverse('question-detail', kwargs={'pk': self.question.id})
+    def test_delete_question_as_unauthorized(self):
+        url = reverse('question-detail', kwargs={'pk': self.question.id})
         
-    #     self.client.credentials()
+        self.client.credentials()
 
-    #     response = self.client.delete(url)
-    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

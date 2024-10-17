@@ -24,7 +24,7 @@ class CustomQuestionPermission(permissions.BasePermission):
         print(f"HAS PERMISSION SECTION: Request User: {request.user}, Is authenticated: {request.user.is_authenticated}, Methode: {request.method}")
         if request.method in permissions.SAFE_METHODS:
             return True
-        elif request.method == 'POST':
+        elif request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
             return request.user.is_authenticated
         return False
 
