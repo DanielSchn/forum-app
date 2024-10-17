@@ -21,7 +21,7 @@ class CustomQuestionPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        print(f"Request User: {request.user}, Is authenticated: {request.user.is_authenticated}")
+        print(f"HAS PERMISSION SECTION: Request User: {request.user}, Is authenticated: {request.user.is_authenticated}, Methode: {request.method}")
         if request.method in permissions.SAFE_METHODS:
             return True
         elif request.method == 'POST':
@@ -29,7 +29,7 @@ class CustomQuestionPermission(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        print(f"Author: {obj.author}, Request User: {request.user}, Is Staff: {request.user.is_staff}, Methode: {request.method}")
+        print(f"HAS OBJECT PERMISSION SECTION: Author: {obj.author}, Request User: {request.user}, Is Staff: {request.user.is_staff}, Methode: {request.method}")
         if request.method in permissions.SAFE_METHODS:
             print('SAFE_METHODS ABSCHNITT')
             return True
