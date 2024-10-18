@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'forum_app'
@@ -137,6 +138,8 @@ REST_FRAMEWORK = {
         'anon': '5/day',
         'user': '6/day',
         'question': '4/day',
+        'question-scope': '10/day',
+        'question-get': '10/day',
         'question-post': '2/day',
         'question-put': '2/day',
         'question-patch': '2/day',
@@ -145,5 +148,8 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }

@@ -17,3 +17,10 @@ class QuestionThrottle(UserRateThrottle):
             print(self.scope)
 
         return super().allow_request(request, view)
+    
+
+# class QuestionGetThrottle(UserRateThrottle):
+#     scope = 'question-get'
+
+# class QuestionPostThrottle(UserRateThrottle):
+#     scope = 'question-post'
